@@ -230,7 +230,7 @@ Content-Type: application/json
 }
 ### Actualizar estado de un préstamo a DEVUELTO
 PUT http://localhost:8083/prestamos/1/estado?estado=DEVUELTO
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 | Tecnología          | Uso                                         |
 |---------------------|---------------------------------------------|
 | Spring Boot 3.x     | Framework base de cada microservicio        |
@@ -243,7 +243,7 @@ PUT http://localhost:8083/prestamos/1/estado?estado=DEVUELTO
 | SLF4J + Lombok @Slf4j | Logs estructurados por capas            |
 | Lombok              | Reducción de boilerplate (getters, setters) |
 | Maven               | Gestión de dependencias y build             |
-## 📁 Estructura de Cada Microservicio
+## Estructura de Cada Microservicio
 {nombre}-service/
 └── src/main/java/com/biblioteca/{nombre}_service/
     ├── controller/      ← Endpoints REST, recibe y responde solicitudes HTTP
@@ -255,7 +255,7 @@ PUT http://localhost:8083/prestamos/1/estado?estado=DEVUELTO
     ├── client/          ← Clientes HTTP para otros microservicios
     ├── config/          ← Configuración de beans (WebClient, RestTemplate)
     └── mapper/          ← Mapeo entre entidades y DTOs
-## 📌 Notas Importantes
+## Notas Importantes
 - Los servicios `prestamo-service` y `multa-service` **requieren** que `usuario-service` esté activo para funcionar correctamente, ya que validan la existencia del usuario antes de registrar.
 - `prestamo-service` también requiere que `libro-service` esté activo para validar el libro.
 - `libro-service` se comunica con `autor-service` para obtener información del autor.
