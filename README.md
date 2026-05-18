@@ -9,42 +9,23 @@ Proyecto Semestral — Asignatura DSY1103 Desarrollo FullStack 1
 ##  Descripción del Proyecto
 Sistema de gestión de biblioteca desarrollado bajo una arquitectura distribuida de microservicios independientes con Spring Boot. El sistema permite administrar libros, autores, usuarios, préstamos, reservas, multas, inventario, categorías, reportes y autenticación, cada uno como un servicio autónomo con su propia base de datos MySQL.
 Cada microservicio implementa el patrón **CSR (Controller → Service → Repository)**, persistencia real con **JPA + Hibernate**, validaciones con **Bean Validation (JSR 380)**, manejo centralizado de errores con `@RestControllerAdvice`, logs estructurados con **SLF4J**, y comunicación entre servicios mediante **WebClient** y **RestTemplate**.
-##  Arquitectura General
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    MICROSERVICIOS                            │
-│                                                             │
-│  [autenticacion]  [usuario]  [autor]   [categoria]         │
-│       :8089          :8082     :8084       :8085            │
-│                                                             │
-│  [libro]   [inventario]  [prestamo]  [reserva]             │
-│   :8081       :8090         :8083      :8087                │
-│                                                             │
-│  [multa]        [reporte]                                   │
-│   :8086           :8088                                     │
-│                                                             │
-│  Comunicación: WebClient (libro→autor, multa→usuario)       │
-│                RestTemplate (prestamo→libro, prestamo→usuario)│
-└─────────────────────────────────────────────────────────────┘
-         │ cada servicio │
-         ▼               ▼
-   [MySQL :3306]   [MySQL :3306]  ...  (BD separada por servicio)
-```
-## 🚀 Microservicios
-| Servicio            | Puerto | Base de datos        | Descripción                              |
-|---------------------|--------|----------------------|------------------------------------------|
-| autenticacion-service | 8089 | `autenticacion_db`   | Gestión de credenciales de acceso        |
-| usuario-service      | 8082  | `usuario_db`         | Gestión de usuarios de la biblioteca     |
-| autor-service        | 8084  | `autor_db`           | Gestión de autores de libros             |
-| categoria-service    | 8085  | `categoria_db`       | Categorías y clasificación de libros     |
-| libro-service        | 8081  | `libro_db`           | Catálogo de libros disponibles           |
-| inventario-service   | 8090  | `inventario_db`      | Control de stock por libro               |
-| prestamo-service     | 8083  | `prestamo_db`        | Registro y gestión de préstamos          |
-| reserva-service      | 8087  | `reserva_db`         | Reservas de libros por usuarios          |
-| multa-service        | 8086  | `multa_db`           | Gestión de multas por mora               |
-| reporte-service      | 8088  | `reporte_db`         | Generación de reportes del sistema       |
+##Enlace de Jira
+https://felipeperezduouc.atlassian.net/jira/software/projects/E2/boards/67?atlOrigin=eyJpIjoiOWMxODk0MjA0NWRkNDY3MTk4ZmViYjExZTI0NDJmODUiLCJwIjoiaiJ9
+## Microservicios
+| Servicio              | Base de datos         | Descripción                              |
+|-----------------------|-----------------------|------------------------------------------|
+| autenticacion-service | `autenticacion_db`    | Gestión de credenciales de acceso        |
+| usuario-service       | `usuario_db`          | Gestión de usuarios de la biblioteca     |
+| autor-service         |  `autor_db`           | Gestión de autores de libros             |
+| categoria-service     |  `categoria_db`       | Categorías y clasificación de libros     |
+| libro-service         | `libro_db`            | Catálogo de libros disponibles           |
+| inventario-service    |  `inventario_db`      | Control de stock por libro               |
+| prestamo-service      | `prestamo_db`         | Registro y gestión de préstamos          |
+| reserva-service       | `reserva_db`          | Reservas de libros por usuarios          |
+| multa-service         | `multa_db`            | Gestión de multas por mora               |
+| reporte-service       | `reporte_db`          | Generación de reportes del sistema       |
 ---
-## 🔗 Comunicación entre Microservicios
+## Comunicación entre Microservicios
 | Origen            | Destino          | Tecnología   | Propósito                                 |
 |-------------------|------------------|--------------|-------------------------------------------|
 | libro-service     | autor-service    | WebClient    | Validar que el autor existe al crear libro |
@@ -52,7 +33,7 @@ Cada microservicio implementa el patrón **CSR (Controller → Service → Repos
 | prestamo-service  | libro-service    | RestTemplate | Validar existencia del libro              |
 | prestamo-service  | usuario-service  | RestTemplate | Validar existencia del usuario            |
 ---
-## 📡 Endpoints REST por Microservicio
+##  Endpoints REST por Microservicio
 ### autenticacion-service (`:8089/autenticacion`)
 | Método | Ruta           | Descripción                    |
 |--------|----------------|--------------------------------|
@@ -131,7 +112,7 @@ Cada microservicio implementa el patrón **CSR (Controller → Service → Repos
 | PUT    | `/reportes/{id}`  | Actualizar reporte      |
 | DELETE | `/reportes/{id}`  | Eliminar reporte        |
 ---
-## ⚙️ Requisitos Previos
+##  Requisitos Previos
 - **Java 17** o superior
 - **Maven 3.8+**
 - **MySQL 8.0+** corriendo en `localhost:3306`
@@ -190,7 +171,7 @@ cd reporte-service/reporte-service
 1. Abre cada carpeta de microservicio como proyecto Maven independiente.
 2. Ejecuta la clase principal `*Application.java` de cada servicio.
 3. Respeta el orden de inicio indicado en la Opción A.
-## 🔧 Credenciales MySQL por Defecto
+## Credenciales MySQL por Defecto
 Cada `application.properties` usa las siguientes credenciales (ajusta si tu configuración es diferente):
 properties
 spring.datasource.username=root
@@ -243,7 +224,7 @@ PUT http://localhost:8083/prestamos/1/estado?estado=DEVUELTO
 | SLF4J + Lombok @Slf4j | Logs estructurados por capas            |
 | Lombok              | Reducción de boilerplate (getters, setters) |
 | Maven               | Gestión de dependencias y build             |
-## Estructura de Cada Microservicio
+##  Estructura de Cada Microservicio
 {nombre}-service/
 └── src/main/java/com/biblioteca/{nombre}_service/
     ├── controller/      ← Endpoints REST, recibe y responde solicitudes HTTP
@@ -255,7 +236,7 @@ PUT http://localhost:8083/prestamos/1/estado?estado=DEVUELTO
     ├── client/          ← Clientes HTTP para otros microservicios
     ├── config/          ← Configuración de beans (WebClient, RestTemplate)
     └── mapper/          ← Mapeo entre entidades y DTOs
-## Notas Importantes
+##  Notas Importantes
 - Los servicios `prestamo-service` y `multa-service` **requieren** que `usuario-service` esté activo para funcionar correctamente, ya que validan la existencia del usuario antes de registrar.
 - `prestamo-service` también requiere que `libro-service` esté activo para validar el libro.
 - `libro-service` se comunica con `autor-service` para obtener información del autor.
